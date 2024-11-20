@@ -1,0 +1,174 @@
+/* Map Editor Styles */
+#editor-container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr 300px;
+  height: 100vh;
+  background: #1a1a1a;
+}
+
+#toolbar {
+  grid-column: 1 / -1;
+  background: #2a2a2a;
+  padding: 15px;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+#toolbar h2 {
+  color: #4caf50;
+  margin: 0 0 15px 0;
+}
+
+.tools {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.editor-button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.editor-button:hover {
+  background: #45a049;
+}
+
+.editor-input {
+  padding: 8px;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: white;
+}
+
+.grid-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.grid-controls input[type='number'] {
+  width: 60px;
+}
+
+#editor-grid {
+  grid-column: 1;
+  background: #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+#editorCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
+}
+
+#properties-panel {
+  grid-column: 2;
+  background: #2a2a2a;
+  padding: 20px;
+  border-left: 2px solid #3a3a3a;
+  overflow-y: auto;
+}
+
+#properties-panel h3 {
+  color: #4caf50;
+  margin: 0 0 20px 0;
+}
+
+.property {
+  margin-bottom: 15px;
+}
+
+.property label {
+  display: block;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.property input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  background: #1a1a1a;
+  color: white;
+}
+
+.mini-map-container {
+  margin-top: 30px;
+}
+
+#miniMap {
+  width: 100%;
+  height: 150px;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+}
+
+.controls-help {
+  margin-top: 30px;
+  color: white;
+}
+
+.controls-help ul {
+  list-style: none;
+  padding: 0;
+}
+
+.controls-help li {
+  margin: 10px 0;
+  padding-left: 20px;
+  position: relative;
+}
+
+.controls-help li:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #4caf50;
+}
+
+.platform {
+  position: absolute;
+  background: #4caf50;
+  cursor: move;
+  user-select: none;
+}
+
+.platform.selected {
+  outline: 2px solid #ffd700;
+}
+
+.platform-handle {
+  width: 10px;
+  height: 10px;
+  background: white;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.handle-rotate {
+  cursor: grab;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.handle-resize {
+  cursor: se-resize;
+  bottom: -5px;
+  right: -5px;
+}

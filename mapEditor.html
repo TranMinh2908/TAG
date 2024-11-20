@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map Editor - Platformer Tag</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mapEditor.css" />
+  </head>
+  <body>
+    <div id="editor-container">
+      <div id="toolbar">
+        <h2>Map Editor</h2>
+        <div class="tools">
+          <button id="addPlatform" class="editor-button">Add Platform</button>
+          <button id="clearMap" class="editor-button">Clear Map</button>
+          <input
+            type="text"
+            id="mapName"
+            placeholder="Map Name"
+            class="editor-input"
+          />
+          <button id="saveMap" class="editor-button">Save Map</button>
+          <button id="backToMenu" class="editor-button">Back to Menu</button>
+          <div class="grid-controls">
+            <label>
+              <input type="checkbox" id="showGrid" checked />
+              Show Grid
+            </label>
+            <input
+              type="number"
+              id="gridSize"
+              value="20"
+              min="10"
+              max="100"
+              step="5"
+              class="editor-input"
+            />
+          </div>
+        </div>
+      </div>
+      <div id="editor-grid">
+        <canvas id="editorCanvas"></canvas>
+      </div>
+      <div id="properties-panel">
+        <h3>Platform Properties</h3>
+        <div class="property">
+          <label>Width:</label>
+          <input type="number" id="platformWidth" value="100" />
+        </div>
+        <div class="property">
+          <label>Height:</label>
+          <input type="number" id="platformHeight" value="20" />
+        </div>
+        <div class="property">
+          <label>Angle:</label>
+          <input type="number" id="platformAngle" value="0" />
+        </div>
+        <div class="mini-map-container">
+          <h3>Mini Map</h3>
+          <canvas id="miniMap"></canvas>
+        </div>
+        <div class="controls-help">
+          <h3>Controls</h3>
+          <ul>
+            <li>Left Click: Select/Move Platform</li>
+            <li>Right Click/Middle Click: Pan Camera</li>
+            <li>Mouse Wheel: Adjust Grid Size</li>
+            <li>Delete: Remove Selected Platform</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="mapEditor.js"></script>
+  </body>
+</html>

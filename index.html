@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platformer Tag</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="ui">
+        <div id="timer">Time: 180</div>
+        <div id="score">Tags: 0</div>
+      </div>
+
+      <div id="menu">
+        <h1>PLATFORMER TAG</h1>
+
+        <div id="main-menu">
+          <button id="startButton" class="menu-button">Start Game</button>
+          <button id="createMapButton" class="menu-button">Create Map</button>
+          <button id="shopButton" class="menu-button">
+            Shop (Coming Soon)
+          </button>
+          <button id="skillButton" class="menu-button">
+            Skills & Weapons (Coming Soon)
+          </button>
+        </div>
+
+        <div id="character-select" class="hidden">
+          <div class="player-count-select">
+            <h2>Number of Players</h2>
+            <div class="count-options">
+              <div class="count-option selected" data-count="2">2 Players</div>
+              <div class="count-option" data-count="3">3 Players</div>
+              <div class="count-option" data-count="4">4 Players</div>
+            </div>
+          </div>
+
+          <div class="character-select-container">
+            <div class="player-section" id="player1">
+              <h2>Player 1</h2>
+              <div class="character blue-character"></div>
+              <div class="controls-info">
+                <h3>Controls</h3>
+                <div class="control-key"><span>W</span> Jump</div>
+                <div class="control-key"><span>A</span> Left</div>
+                <div class="control-key"><span>D</span> Right</div>
+                <div class="control-key"><span>E</span> Skill</div>
+              </div>
+              <div class="player-type-select">
+                <h3>Select Type</h3>
+                <div class="type-options">
+                  <div class="player-type-option selected" data-type="human">
+                    <span>Human</span>
+                  </div>
+                  <div class="player-type-option" data-type="bot">
+                    <span>Bot</span>
+                  </div>
+                </div>
+              </div>
+              <div class="difficulty-select hidden">
+                <h3>Bot Difficulty</h3>
+                <div class="difficulty-options">
+                  <div class="difficulty-option" data-difficulty="easy">
+                    <span>Easy</span>
+                  </div>
+                  <div
+                    class="difficulty-option selected"
+                    data-difficulty="medium"
+                  >
+                    <span>Medium</span>
+                  </div>
+                  <div class="difficulty-option" data-difficulty="hard">
+                    <span>Hard</span>
+                  </div>
+                </div>
+              </div>
+              <div class="skill-select">
+                <h3>Select Skill</h3>
+                <div class="skill-options">
+                  <div class="skill-option selected" data-skill="dash">
+                    <span>Dash</span>
+                  </div>
+                  <div class="skill-option" data-skill="double-jump">
+                    <span>Double Jump</span>
+                  </div>
+                  <div class="skill-option" data-skill="teleport">
+                    <span>Teleport</span>
+                  </div>
+                  <div class="skill-option" data-skill="none">
+                    <span>None</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="player-section" id="player2">
+              <h2>Player 2</h2>
+              <div class="character red-character"></div>
+              <div class="controls-info">
+                <h3>Controls</h3>
+                <div class="control-key"><span>↑</span> Jump</div>
+                <div class="control-key"><span>←</span> Left</div>
+                <div class="control-key"><span>→</span> Right</div>
+                <div class="control-key"><span>/</span> Skill</div>
+              </div>
+              <div class="player-type-select">
+                <h3>Select Type</h3>
+                <div class="type-options">
+                  <div class="player-type-option selected" data-type="human">
+                    <span>Human</span>
+                  </div>
+                  <div class="player-type-option" data-type="bot">
+                    <span>Bot</span>
+                  </div>
+                </div>
+              </div>
+              <div class="difficulty-select hidden">
+                <h3>Bot Difficulty</h3>
+                <div class="difficulty-options">
+                  <div class="difficulty-option" data-difficulty="easy">
+                    <span>Easy</span>
+                  </div>
+                  <div
+                    class="difficulty-option selected"
+                    data-difficulty="medium"
+                  >
+                    <span>Medium</span>
+                  </div>
+                  <div class="difficulty-option" data-difficulty="hard">
+                    <span>Hard</span>
+                  </div>
+                </div>
+              </div>
+              <div class="skill-select">
+                <h3>Select Skill</h3>
+                <div class="skill-options">
+                  <div class="skill-option selected" data-skill="dash">
+                    <span>Dash</span>
+                  </div>
+                  <div class="skill-option" data-skill="double-jump">
+                    <span>Double Jump</span>
+                  </div>
+                  <div class="skill-option" data-skill="teleport">
+                    <span>Teleport</span>
+                  </div>
+                  <div class="skill-option" data-skill="none">
+                    <span>None</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="player-section hidden" id="player3">
+              <h2>Player 3</h2>
+              <div class="character green-character"></div>
+              <div class="controls-info">
+                <h3>Controls</h3>
+                <div class="control-key"><span>I</span> Jump</div>
+                <div class="control-key"><span>J</span> Left</div>
+                <div class="control-key"><span>L</span> Right</div>
+                <div class="control-key"><span>O</span> Skill</div>
+              </div>
+              <div class="player-type-select">
+                <h3>Select Type</h3>
+                <div class="type-options">
+                  <div class="player-type-option selected" data-type="human">
+                    <span>Human</span>
+                  </div>
+                  <div class="player-type-option" data-type="bot">
+                    <span>Bot</span>
+                  </div>
+                </div>
+              </div>
+              <div class="difficulty-select hidden">
+                <h3>Bot Difficulty</h3>
+                <div class="difficulty-options">
+                  <div class="difficulty-option" data-difficulty="easy">
+                    <span>Easy</span>
+                  </div>
+                  <div
+                    class="difficulty-option selected"
+                    data-difficulty="medium"
+                  >
+                    <span>Medium</span>
+                  </div>
+                  <div class="difficulty-option" data-difficulty="hard">
+                    <span>Hard</span>
+                  </div>
+                </div>
+              </div>
+              <div class="skill-select">
+                <h3>Select Skill</h3>
+                <div class="skill-options">
+                  <div class="skill-option selected" data-skill="dash">
+                    <span>Dash</span>
+                  </div>
+                  <div class="skill-option" data-skill="double-jump">
+                    <span>Double Jump</span>
+                  </div>
+                  <div class="skill-option" data-skill="teleport">
+                    <span>Teleport</span>
+                  </div>
+                  <div class="skill-option" data-skill="none">
+                    <span>None</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="player-section hidden" id="player4">
+              <h2>Player 4</h2>
+              <div class="character yellow-character"></div>
+              <div class="controls-info">
+                <h3>Controls</h3>
+                <div class="control-key"><span>8</span> Jump</div>
+                <div class="control-key"><span>4</span> Left</div>
+                <div class="control-key"><span>6</span> Right</div>
+                <div class="control-key"><span>9</span> Skill</div>
+                <div class="numpad-note">(Numpad)</div>
+              </div>
+              <div class="player-type-select">
+                <h3>Select Type</h3>
+                <div class="type-options">
+                  <div class="player-type-option selected" data-type="human">
+                    <span>Human</span>
+                  </div>
+                  <div class="player-type-option" data-type="bot">
+                    <span>Bot</span>
+                  </div>
+                </div>
+              </div>
+              <div class="difficulty-select hidden">
+                <h3>Bot Difficulty</h3>
+                <div class="difficulty-options">
+                  <div class="difficulty-option" data-difficulty="easy">
+                    <span>Easy</span>
+                  </div>
+                  <div
+                    class="difficulty-option selected"
+                    data-difficulty="medium"
+                  >
+                    <span>Medium</span>
+                  </div>
+                  <div class="difficulty-option" data-difficulty="hard">
+                    <span>Hard</span>
+                  </div>
+                </div>
+              </div>
+              <div class="skill-select">
+                <h3>Select Skill</h3>
+                <div class="skill-options">
+                  <div class="skill-option selected" data-skill="dash">
+                    <span>Dash</span>
+                  </div>
+                  <div class="skill-option" data-skill="double-jump">
+                    <span>Double Jump</span>
+                  </div>
+                  <div class="skill-option" data-skill="teleport">
+                    <span>Teleport</span>
+                  </div>
+                  <div class="skill-option" data-skill="none">
+                    <span>None</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-select">
+            <h2>Select Map</h2>
+            <div class="map-options">
+              <div class="map-option selected" data-map="default">
+                <div class="map-preview">
+                  <img src="map1-preview.png" alt="Default Map" />
+                  <span>Default</span>
+                </div>
+              </div>
+              <div id="customMapOptions"></div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="backButton" class="menu-button">Back</button>
+            <button id="playButton" class="menu-button">GO!</button>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="gameCanvas"></canvas>
+    </div>
+    <script type="module" src="game.js"></script>
+  </body>
+</html>
