@@ -1,4 +1,7 @@
 {
+  "name": "supreme-tag",
+  "version": "1.0.0",
+  "description": "Supreme Tag - The Ultimate Multiplayer Tag Game",
   "scripts": {
     "start": "servor --reload"
   },

@@ -1,27 +1,45 @@
 export class EasyBot {
   constructor(player) {
     this.player = player;
-    this.decisionInterval = 800; // Giữ nguyên để bot dễ
+    this.decisionInterval = 800;
     this.lastDecision = 0;
     this.lastSkillUse = 0;
     this.skillCooldown = 2000;
     this.jumpCooldown = 1000;
     this.lastJump = 0;
-    this.randomMovementTimer = 0;
-    this.randomMovementDuration = 1500;
+    this.movementState = 'idle';
+    this.stateTimer = 0;
+    this.preferredDirection = Math.random() < 0.5 ? 'left' : 'right';
   }
 
   update(target, platforms) {
     const now = Date.now();
+    
+    // Update movement state
+    if (now - this.stateTimer > 2000) {
+      this.stateTimer = now;
+      this.updateMovementState();
+    }
+
     if (now - this.lastDecision > this.decisionInterval) {
       this.makeDecision(target, platforms);
       this.lastDecision = now;
     }
+  }
 
-    // Random movement changes
-    if (now - this.randomMovementTimer > this.randomMovementDuration) {
-      this.randomMovementTimer = now;
-      this.randomMovementDuration = 1000 + Math.random() * 1000;
+  updateMovementState() {
+    const states = ['idle', 'wander', 'chase', 'retreat'];
+    const weights = this.player.isIt ? [0.1, 0.2, 0.7, 0] : [0.2, 0.3, 0, 0.5];
+    
+    let random = Math.random();
+    let sum = 0;
+    for (let i = 0; i < states.length; i++) {
+      sum += weights[i];
+      if (random <= sum) {
+        this.movementState = states[i];
+        this.preferredDirection = Math.random() < 0.5 ? 'left' : 'right';
+        break;
+      }
     }
   }
 
@@ -37,41 +55,57 @@ export class EasyBot {
     this.player.controls.up = false;
     this.player.controls.dash = false;
 
-    // Add some randomness to make it more human-like
-    if (Math.random() < 0.7) {
-      // 70% chance to make a decision
-      if (this.player.isIt) {
-        // Chase behavior with some mistakes
-        if (dx > 0 && Math.random() > 0.2) {
-          this.player.controls.right = true;
-        } else if (dx < 0 && Math.random() > 0.2) {
-          this.player.controls.left = true;
+    switch (this.movementState) {
+      case 'idle':
+        // Occasionally make small movements
+        if (Math.random() < 0.3) {
+          this.player.controls[Math.random() < 0.5 ? 'left' : 'right'] = true;
         }
-      } else {
-        // Escape behavior with some mistakes
-        if (distance < 200) {
-          if (dx > 0 && Math.random() > 0.2) {
-            this.player.controls.left = true;
-          } else if (dx < 0 && Math.random() > 0.2) {
+        break;
+
+      case 'wander':
+        // Move in preferred direction with platform awareness
+        this.player.controls[this.preferredDirection] = true;
+        if (this.isNearPlatformEdge(platforms)) {
+          this.preferredDirection = this.preferredDirection === 'left' ? 'right' : 'left';
+        }
+        break;
+
+      case 'chase':
+        // Simple chase with occasional mistakes
+        if (Math.random() < 0.8) { // 80% accuracy
+          if (dx > 0) {
             this.player.controls.right = true;
+          } else {
+            this.player.controls.left = true;
           }
         } else {
-          // Random movement when far from target
-          this.player.controls.left = Math.random() > 0.5;
-          this.player.controls.right = !this.player.controls.left;
+          // Make intentional mistakes
+          this.player.controls[Math.random() < 0.5 ? 'left' : 'right'] = true;
         }
-      }
+        break;
+
+      case 'retreat':
+        // Move away from target with some randomness
+        if (Math.random() < 0.7) { // 70% accuracy
+          if (dx > 0) {
+            this.player.controls.left = true;
+          } else {
+            this.player.controls.right = true;
+          }
+        }
+        break;
     }
 
-    // Improved jumping logic with cooldown
+    // Jumping logic
     if (now - this.lastJump > this.jumpCooldown) {
-      if ((dy < -50 && Math.random() > 0.3) || this.shouldJump(platforms)) {
+      if (this.shouldJump(platforms, target)) {
         this.player.controls.up = true;
         this.lastJump = now;
       }
     }
 
-    // Occasional skill usage
+    // Simple skill usage
     if (now - this.lastSkillUse > this.skillCooldown && Math.random() < 0.3) {
       if (this.player.skill === 'dash' && distance < 150) {
         this.player.controls.dash = true;
@@ -80,18 +114,29 @@ export class EasyBot {
     }
   }
 
-  shouldJump(platforms) {
-    // Simple platform detection
-    const ahead = this.player.controls.right ? 50 : -50;
-    const futureX = this.player.x + ahead;
+  shouldJump(platforms, target) {
+    // Jump if target is above
+    if (target.y < this.player.y - 50 && Math.random() < 0.4) {
+      return true;
+    }
 
-    return platforms.some((platform) => {
-      const onPlatform =
-        platform.y < this.player.y + this.player.height * 1.2 &&
-        platform.y > this.player.y &&
-        futureX > platform.x &&
-        futureX < platform.x + platform.width;
-      return onPlatform && Math.random() > 0.3; // Add randomness to jumping decision
+    // Jump near platform edges
+    if (this.isNearPlatformEdge(platforms) && Math.random() < 0.5) {
+      return true;
+    }
+
+    // Random jumps
+    return Math.random() < 0.1;
+  }
+
+  isNearPlatformEdge(platforms) {
+    const margin = 20;
+    return platforms.some(platform => {
+      const onPlatform = this.player.y + this.player.height >= platform.y - 5 &&
+                        this.player.y + this.player.height <= platform.y + 5;
+      const nearEdge = Math.abs(this.player.x - platform.x) < margin ||
+                      Math.abs(this.player.x - (platform.x + platform.width)) < margin;
+      return onPlatform && nearEdge;
     });
   }
 }

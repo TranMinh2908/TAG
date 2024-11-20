@@ -132,6 +132,7 @@ const game = {
         const difficultyOption = playerSection.querySelector(
           '.difficulty-option.selected'
         );
+
         const difficulty = difficultyOption
           ? difficultyOption.dataset.difficulty
           : 'medium';
@@ -173,6 +174,9 @@ const game = {
 
     menu.classList.add('hidden');
     this.gameStarted = true;
+    if (this.gameLoop) clearInterval(this.gameLoop);
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    
     this.gameLoop = setInterval(() => this.update(), 1000 / 60);
     this.timerInterval = setInterval(() => {
       this.timeLeft--;
@@ -266,12 +270,67 @@ const game = {
     menu.innerHTML = '';
     menu.appendChild(endGameMenu);
 
-    document.getElementById('restartButton').addEventListener('click', () => {
-      showCharacterSelect();
-      this.start();
+    const restartButton = document.getElementById('restartButton');
+    const homeButton = document.getElementById('homeButton');
+
+    // Remove any existing event listeners
+    const newRestartButton = restartButton.cloneNode(true);
+    const newHomeButton = homeButton.cloneNode(true);
+    restartButton.parentNode.replaceChild(newRestartButton, restartButton);
+    homeButton.parentNode.replaceChild(newHomeButton, homeButton);
+
+    // Add new event listeners
+    newRestartButton.addEventListener('click', () => {
+      // Reset game state
+      this.players = [];
+      this.platforms = [];
+      bots = [];
+      this.timeLeft = GAME_TIME;
+      this.tagCount = 0;
+      timerDisplay.textContent = `Time: ${this.timeLeft}`;
+      scoreDisplay.textContent = `Tags: ${this.tagCount}`;
+      
+      // Reset UI
+      menu.classList.add('hidden');
+      mainMenu.classList.add('hidden');
+      characterSelect.classList.remove('hidden');
+
+      // Reset selections but keep map selection
+      document.querySelectorAll('.selected').forEach(el => {
+        if (!el.classList.contains('map-option')) {
+          el.classList.remove('selected');
+        }
+      });
+
+      // Reset default selections
+      document.querySelector('.count-option[data-count="2"]').classList.add('selected');
+      playerCount = 2;
+
+      // Reset player sections
+      document.querySelectorAll('.player-section').forEach((section, index) => {
+        if (index < 2) {
+          section.classList.remove('hidden');
+          section.querySelector('.player-type-option[data-type="player"]').classList.add('selected');
+          section.querySelector('.skill-option[data-skill="dash"]').classList.add('selected');
+          section.querySelector('.difficulty-select').classList.add('hidden');
+        } else {
+          section.classList.add('hidden');
+        }
+      });
+
+      // Add event listener for Start button
+      const startButton = document.querySelector('#startButton');
+      if (startButton) {
+        const newStartButton = startButton.cloneNode(true);
+        startButton.parentNode.replaceChild(newStartButton, startButton);
+        newStartButton.addEventListener('click', () => {
+          characterSelect.classList.add('hidden');
+          this.start();
+        });
+      }
     });
 
-    document.getElementById('homeButton').addEventListener('click', () => {
+    newHomeButton.addEventListener('click', () => {
       location.reload();
     });
   },
@@ -340,7 +399,7 @@ document.addEventListener('keydown', (e) => {
 
   game.players.forEach((player, index) => {
     const controls = playerControls[index];
-    const playerSection = document.querySelector(`#player${index + 1}`);
+    const playerSection = document.querySelector(`.player-section:nth-child(${index + 1})`);
     if (!playerSection) return;
 
     const selectedTypeOption = playerSection.querySelector(
@@ -374,7 +433,7 @@ document.addEventListener('keyup', (e) => {
 
   game.players.forEach((player, index) => {
     const controls = playerControls[index];
-    const playerSection = document.querySelector(`#player${index + 1}`);
+    const playerSection = document.querySelector(`.player-section:nth-child(${index + 1})`);
     if (!playerSection) return;
 
     const selectedTypeOption = playerSection.querySelector(
@@ -482,7 +541,10 @@ document.querySelectorAll('.difficulty-option').forEach((option) => {
 
 startButton.addEventListener('click', showCharacterSelect);
 backButton.addEventListener('click', showMainMenu);
-playButton.addEventListener('click', () => game.start());
+playButton.addEventListener('click', () => {
+  characterSelect.classList.add('hidden');
+  game.start();
+});
 
 // Load custom maps on initial load
 loadCustomMaps();
