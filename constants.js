@@ -10,5 +10,5 @@ export const MAP_HEIGHT = 1080;
 // Skill cooldowns
 export const DASH_COOLDOWN = 1000;
 export const DASH_DURATION = 200;
-export const TELEPORT_COOLDOWN = 2000;
+export const TELEPORT_COOLDOWN = 10000;
 export const DOUBLE_JUMP_COOLDOWN = 800;

@@ -41,21 +41,48 @@ export class Player {
     this.doubleJumpCooldown = DOUBLE_JUMP_COOLDOWN;
     this.lastDoubleJumpTime = 0;
     this.speed = MOVE_SPEED;
+    
+    // Add properties for double-tap detection
+    this.lastUpPressTime = 0;
+    this.lastLeftPressTime = 0;
+    this.lastRightPressTime = 0;
+    this.doubleTapThreshold = 300; // Time window for double-tap in milliseconds
   }
 
   update(platforms, canvas, camera) {
-    // Handle skills
+    const now = Date.now();
+
+    // Handle teleport skill
     if (this.controls.dash) {
-      if (this.canDash) {
-        let direction;
-        if (this.controls.up) {
-          direction = 'up';
-        } else {
-          direction = this.velocity.x > 0 ? 'right' : 'left';
-        }
-        handleDash(this, direction);
-      } else if (this.canTeleport) {
+      if (this.canTeleport && now - this.lastTeleportTime >= this.teleportCooldown) {
         handleTeleport(this, platforms, canvas, camera);
+      }
+    }
+
+    // Handle double-tap dash
+    if (this.canDash && !this.isDashing && now - this.lastDashTime >= this.dashCooldown) {
+      if (this.controls.up) {
+        const timeSinceLastUp = now - this.lastUpPressTime;
+        if (timeSinceLastUp <= this.doubleTapThreshold && timeSinceLastUp > 50) {
+          handleDash(this, 'up');
+        }
+        this.lastUpPressTime = now;
+      }
+      
+      if (this.controls.left) {
+        const timeSinceLastLeft = now - this.lastLeftPressTime;
+        if (timeSinceLastLeft <= this.doubleTapThreshold && timeSinceLastLeft > 50) {
+          handleDash(this, 'left');
+        }
+        this.lastLeftPressTime = now;
+      }
+      
+      if (this.controls.right) {
+        const timeSinceLastRight = now - this.lastRightPressTime;
+        if (timeSinceLastRight <= this.doubleTapThreshold && timeSinceLastRight > 50) {
+          handleDash(this, 'right');
+        }
+        this.lastRightPressTime = now;
       }
     }
 
